@@ -1,5 +1,5 @@
 import Data.Bits (xor, testBit, setBit)
-import Data.List (elemIndices, elemIndex, minimumBy)
+import Data.List (elemIndex, minimumBy)
 import Data.Maybe (fromJust)
 import Data.Function (on)
 
