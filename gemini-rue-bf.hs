@@ -3,9 +3,10 @@ import Data.List (elemIndex, minimumBy)
 import Data.Maybe (fromJust)
 import Data.Function (on)
 
-type Solution = [Int]
 type Goal = Int
 type Node = Int
+type Solution = [Node]
+type SolutionIndices = [Int]
 
 bitsToNode:: [Int] -> Node
 bitsToNode = foldl setBit 0 . map (subtract 1)
@@ -29,14 +30,14 @@ subsets (x:xs) = subs ++ map (x:) subs where subs = subsets xs
 xors :: [Int] -> Int
 xors = foldl xor 0
 
-solution :: [Node] -> [Goal] -> Solution
-solution nodes goals =
-  solutionIndices $ minimumBy (compare `on` length) $ solutions nodes goals
-
+shortestSolution :: [Node] -> [Goal] -> SolutionIndices
+shortestSolution nodes goals =
+  solutionIndices nodes $ minimumBy (compare `on` length) $ solutions nodes goals
+  
 solutions :: [Node] -> [Goal] -> [Solution]
 solutions nodes goals = [s | s <- subsets nodes, xors s `elem` goals]
 
-solutionIndices :: [Node] -> [Int]
-solutionIndices = map $ (+1) . fromJust . (`elemIndex` nodes)
+solutionIndices :: [Node] -> Solution -> SolutionIndices
+solutionIndices nodes solution = [1 + (fromJust $ n `elemIndex` nodes) | n <- solution]
 
-main = print $ map (solution nodes) allGoals
+main = print $ map (shortestSolution nodes) allGoals
