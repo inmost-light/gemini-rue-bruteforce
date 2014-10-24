@@ -30,9 +30,10 @@ subsets (x:xs) = subs ++ map (x:) subs where subs = subsets xs
 xors :: [Int] -> Int
 xors = foldl xor 0
 
-shortestSolution :: [Node] -> [Goal] -> SolutionIndices
-shortestSolution nodes goals =
-  solutionIndices nodes $ minimumBy (compare `on` length) $ solutions nodes goals
+shortestSolutionIndices :: [Node] -> [Goal] -> SolutionIndices
+shortestSolutionIndices nodes goals =
+  solutionIndices nodes shortestSolution
+  where shortestSolution = minimumBy (compare `on` length) $ solutions nodes goals
   
 solutions :: [Node] -> [Goal] -> [Solution]
 solutions nodes goals = [s | s <- subsets nodes, xors s `elem` goals]
@@ -40,4 +41,4 @@ solutions nodes goals = [s | s <- subsets nodes, xors s `elem` goals]
 solutionIndices :: [Node] -> Solution -> SolutionIndices
 solutionIndices nodes solution = [1 + (fromJust $ n `elemIndex` nodes) | n <- solution]
 
-main = print $ map (shortestSolution nodes) allGoals
+main = print $ map (shortestSolutionIndices nodes) allGoals
